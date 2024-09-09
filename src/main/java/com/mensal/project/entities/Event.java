@@ -1,6 +1,5 @@
 package com.mensal.project.entities;
 
-import com.mensal.project.entities.enums.Invitation;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
