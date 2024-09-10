@@ -1,6 +1,6 @@
 create table users_tb(
 	id bigint not null primary key auto_increment,
-    username varchar(255) not null unique,
+    email varchar(255) not null unique,
     user_password varchar(255) not null,
     phone varchar(20) not null unique,
     user_name varchar(100) not null,
