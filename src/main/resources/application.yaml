@@ -15,3 +15,7 @@ spring:
     sendgrid:
       api:
         key:
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true

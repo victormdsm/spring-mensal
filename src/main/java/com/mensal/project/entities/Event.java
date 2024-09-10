@@ -43,7 +43,7 @@ public class Event {
     private User user;
 
     @OneToMany(mappedBy = "event")
-    private List<User> participantsEvents;
+    private List<UserEvent> UserEvents;
 
     @OneToMany(mappedBy = "event")
     private List<Invitation> invitations;
