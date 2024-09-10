@@ -34,13 +34,13 @@ public class UserService {
     public User update(Long id, User user){
 
         User update = findById(id);
-        if(!user.getPhone().equals(update.getPhone())){
+        if(user.getPhone() != null && !user.getPhone().equals(update.getPhone())){
             update.setPhone(user.getPhone());
         }
-        if (!user.getEmail().equals(update.getPhone())){
+        if (user.getEmail() != null && !user.getEmail().equals(update.getEmail())){
             update.setEmail(user.getEmail());
         }
-        if (!user.getName().equals(update.getName())){
+        if (user.getName() != null && !user.getName().equals(update.getName())){
             update.setName(user.getName());
         }
         System.out.println(user.getId());
