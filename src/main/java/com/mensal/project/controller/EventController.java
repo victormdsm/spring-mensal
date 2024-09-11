@@ -3,10 +3,6 @@ package com.mensal.project.controller;
 import com.mensal.project.dto.eventdto.EventDto;
 import com.mensal.project.dto.eventdto.ResponseEventDto;
 import com.mensal.project.dto.eventdto.UpdateEventDto;
-import com.mensal.project.dto.userdto.ResponseUserDto;
-import com.mensal.project.dto.userdto.UpdateUserDto;
-import com.mensal.project.dto.userdto.UserDto;
-import com.mensal.project.entities.Event;
 import com.mensal.project.mapper.EventMapper;
 import com.mensal.project.service.EventService;
 import jakarta.validation.Valid;
@@ -27,6 +23,7 @@ public class EventController {
 
     @Autowired
     EventMapper mapper;
+
 
     @PostMapping("/save")
     public ResponseEntity<ResponseEventDto> save(@Valid @RequestBody EventDto dto){
