@@ -1,4 +1,6 @@
 package com.mensal.project.dto.userdto;
 
-public record UserDtoIntegration(Long id) {
+import jakarta.validation.constraints.NotNull;
+
+public record UserDtoIntegration(@NotNull Long id) {
 }
