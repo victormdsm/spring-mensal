@@ -21,10 +21,10 @@ public class UserEvent {
     private Long id;
 
     @Column(name = "registration_date_time",nullable = false)
-    private LocalDateTime registrationDateTime;
+    private LocalDateTime registrationDateTime = LocalDateTime.now();
 
     @Column(name = "participant_status") @Enumerated(EnumType.STRING)
-    private Status participantStatus;
+    private Status participantStatus = Status.PENDING;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)

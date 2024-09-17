@@ -1,10 +1,15 @@
 package com.mensal.project.service;
 
+import com.mensal.project.configuration.exception.EntityNotFoundException;
+import com.mensal.project.configuration.exception.MailSendException;
 import com.mensal.project.entities.Invitation;
+import com.mensal.project.repository.EventRepository;
 import com.mensal.project.repository.InvitationRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
@@ -16,10 +21,17 @@ public class JavaMailService {
     private InvitationRepository invitationRepository;
 
     @Autowired
-    private JavaMailSender mailSender;
+    private EventRepository eventRepository;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     public void sendEmail(Invitation invitation) {
+        var event = eventRepository.findById(invitation.getEvent().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Evento não encontrado"));
+        invitation.setEvent(event);
 
+        // Define o conteúdo HTML com a codificação UTF-8
         String htmlContent = "<!DOCTYPE html>" +
                 "<html lang=\"pt-BR\">" +
                 "<head>" +
@@ -56,14 +68,19 @@ public class JavaMailService {
                 "</body>" +
                 "</html>";
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(invitation.getEmail());
-        String subject = "Convite para o evento: " + invitation.getEvent().getTitle();
-        message.setSubject(subject);
-        message.setText(htmlContent);
-        message.setFrom("tc84214436@mail.com");
-        mailSender.send(message);
-        invitationRepository.save(invitation);
+        MimeMessage message = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(invitation.getEmail());
+            helper.setSubject("Convite para o evento: " + invitation.getEvent().getTitle());
+            helper.setText(htmlContent, true);
+            helper.setFrom("tc84214436@mail.com");
 
+            javaMailSender.send(message);
+        } catch (MessagingException e) {
+            throw new MailSendException("Falha ao enviar convite");
+        }
+
+        invitationRepository.save(invitation);
     }
 }

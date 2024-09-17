@@ -24,7 +24,7 @@ public class Invitation {
     private String email;
 
     @Column(name = "invite_date_time", nullable = false)
-    private LocalDateTime invitationDateTime;
+    private LocalDateTime invitationDateTime = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id",nullable = false)

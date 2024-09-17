@@ -1,8 +1,11 @@
 package com.mensal.project.service;
 
+import com.mensal.project.configuration.exception.EntityNotFoundException;
+import com.mensal.project.configuration.exception.UniqueMailException;
 import com.mensal.project.entities.User;
 import com.mensal.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +20,17 @@ public class UserService {
 
     @Transactional
     public User save(User user) {
-        return userRepository.save(user);
+        try{
+            return userRepository.save(user);
+        } catch (DataIntegrityViolationException ex){
+            throw new UniqueMailException("Este endereço de email já esta sendo utilizado");
+        }
+
     }
 
     @Transactional(readOnly = true)
     public User findById(Long id){
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
+        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Usuario não encontrado"));
     }
 
     @Transactional(readOnly = true)

@@ -19,3 +19,12 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+
+
+springdoc:
+  swagger-ui:
+      path: /docs-event.html
+  api-docs:
+    path: /docs-event
+
+
