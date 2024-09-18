@@ -51,8 +51,6 @@ public class UserService {
         if (user.getName() != null && !user.getName().equals(update.getName())){
             update.setName(user.getName());
         }
-        System.out.println(user.getId());
-        System.out.println(update.toString());
-        return update;
+        return save(update);
     }
 }
