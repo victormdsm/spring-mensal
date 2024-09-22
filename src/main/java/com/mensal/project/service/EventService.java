@@ -23,6 +23,7 @@ public class EventService {
     @Autowired
     private UserRepository userRepository;
     @Transactional
+
     public Event save(Event event) {
         var user = userRepository.findById(event.getUser().getId()).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
         if(!user.getUserType().equals(UserType.ADMIN)){
@@ -33,6 +34,9 @@ public class EventService {
         }
         if(event.getEndDateTime().isBefore(event.getStartDateTime())) {
             throw new BusinessException("A data de término do evento não pode ser anterior à data de início.");
+        }
+        if (event.getCapacity() <= 0) {
+            throw new BusinessException("A capacidade do evento deve ser maior que zero.");
         }
         return this.eventRepository.save(event);
     }
