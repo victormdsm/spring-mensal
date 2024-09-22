@@ -56,4 +56,10 @@ public class EventController {
         return new ResponseEntity<>(list.stream().map(mapper::toDto).collect(Collectors.toList()), HttpStatus.OK);
     }
 
+    @DeleteMapping("/delete/{id}")
+    private ResponseEntity<Void> delete(@PathVariable Long id){
+        eventService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

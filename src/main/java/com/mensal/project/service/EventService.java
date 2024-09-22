@@ -86,4 +86,7 @@ public class EventService {
         }
         return events;
     }
+
+    @Transactional
+    public void delete(Long id){eventRepository.deleteById(id);}
 }
