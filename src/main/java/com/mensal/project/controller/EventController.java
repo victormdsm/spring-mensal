@@ -50,4 +50,10 @@ public class EventController {
         return new ResponseEntity<>(event.stream().map(mapper::toDto).collect(Collectors.toList()), HttpStatus.OK);
     }
 
+    @GetMapping("/user/{id}")
+    private ResponseEntity<List<ResponseEventDto>> findByUserId(@PathVariable Long id){
+        var list = eventService.findByUserId(id);
+        return new ResponseEntity<>(list.stream().map(mapper::toDto).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
 }

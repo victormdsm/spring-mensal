@@ -77,4 +77,13 @@ public class EventService {
     public List<Event> findAll(){
         return this.eventRepository.findAll();
     }
+
+    @Transactional(readOnly = true)
+    public List<Event> findByUserId(Long id){
+        var events = eventRepository.findByUserId(id);
+        if (events.isEmpty()) {
+            throw new EntityNotFoundException("Nenhum evento encontrado para o usuário com ID " + id);
+        }
+        return events;
+    }
 }
