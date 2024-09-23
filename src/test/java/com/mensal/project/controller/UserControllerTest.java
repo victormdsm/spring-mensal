@@ -1,6 +1,7 @@
 package com.mensal.project.controller;
 
 import com.mensal.project.configuration.exception.EntityNotFoundException;
+import com.mensal.project.configuration.exception.UniqueMailException;
 import com.mensal.project.dto.userdto.ResponseUserDto;
 import com.mensal.project.dto.userdto.UpdateUserDto;
 import com.mensal.project.dto.userdto.UserDto;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 
 import java.sql.Array;
@@ -57,11 +59,10 @@ public class UserControllerTest {
 //    @Test
 //    @DisplayName("Testando Erro de validacao de campo")
 //    void cenario02() {
-//        var obj = new UserDto("", "", "+", "");
-//        ResponseEntity<ResponseUserDto> objResponse = userController.save(obj);
-//        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, objResponse.getStatusCode());
-//        assertNull(objResponse.getBody());
-//    }
+//      var obj = new UserDto("", "", "", "");
+//      assertThrows(MethodArgumentNotValidException.class, () ->
+//      userController.save(obj));
+//  }
 
     @Test
     @DisplayName("Testando find by id")
@@ -103,5 +104,15 @@ public class UserControllerTest {
         var updated = userController.update(1L,  dto);
         assertEquals(HttpStatus.OK, updated.getStatusCode());
         assertEquals(dto.name(), updated.getBody().name());
+    }
+
+    @Test
+    @DisplayName("Erro de email duplicado")
+    void Cenario07() {
+
+        when(userRepository.save(any(User.class))).thenThrow(new UniqueMailException("email inválido"));
+        var obj = new UserDto("mamonha@gmail.com", "123456", "+55 45 98416-9058", "mamonha cardoso");
+        assertThrows(UniqueMailException.class, () -> userController.save(obj));
+
     }
 }
