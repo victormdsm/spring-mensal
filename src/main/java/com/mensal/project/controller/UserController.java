@@ -6,7 +6,6 @@ import com.mensal.project.dto.userdto.UserDto;
 import com.mensal.project.mapper.UserMapper;
 import com.mensal.project.service.UserService;
 import jakarta.validation.Valid;
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,33 +19,33 @@ import java.util.stream.Collectors;
 public class UserController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    UserMapper mapper;
+    private UserMapper mapper;
 
     @PostMapping("/save")
-    public ResponseEntity<ResponseUserDto> save(@Valid @RequestBody UserDto dto){
+    public ResponseEntity<ResponseUserDto> save(@RequestBody @Valid UserDto dto){
         var user = mapper.toEntity(dto);
         userService.save(user);
-        return ResponseEntity.ok(mapper.toDto(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toDto(user));
     }
 
     @PutMapping("/update/{id}")
-    private ResponseEntity<ResponseUserDto> update(@PathVariable Long id, @RequestBody UpdateUserDto dto){
+    public ResponseEntity<ResponseUserDto> update(@PathVariable Long id, @RequestBody @Valid UpdateUserDto dto){
         var user = mapper.toEntityUpdate(dto);
         user = userService.update(id, user);
         return ResponseEntity.ok(mapper.toDto(user));
     }
 
     @GetMapping("/findbyid/{id}")
-    private ResponseEntity<ResponseUserDto> findById(@PathVariable Long id){
+    public ResponseEntity<ResponseUserDto> findById(@PathVariable Long id){
         var user = userService.findById(id);
         return new ResponseEntity<>(mapper.toDto(user), HttpStatus.OK);
     }
 
     @GetMapping("/findall")
-    private ResponseEntity<List<ResponseUserDto>> findAll(){
+    public ResponseEntity<List<ResponseUserDto>> findAll(){
         var user = userService.findAll();
         return new ResponseEntity<>(user.stream().map(mapper::toDto).collect(Collectors.toList()), HttpStatus.OK);
     }
