@@ -77,7 +77,7 @@ public class JavaMailService {
             helper.setFrom("tc84214436@mail.com");
 
             javaMailSender.send(message);
-        } catch (MessagingException e) {
+        } catch (MessagingException | RuntimeException e) {
             throw new MailSendException("Falha ao enviar convite");
         }
 

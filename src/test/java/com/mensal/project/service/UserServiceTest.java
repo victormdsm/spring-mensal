@@ -27,6 +27,7 @@ public class UserServiceTest {
     @MockBean
     UserRepository userRepository;
 
+
     User user = new User(1L, "mamonha@gmail.com", "123456", "+55 45 98416-9058", "mamonha cardoso", UserType.PARTICIPANT, null);
     User userUpdate = new User(1L, "mamonha302@gmail.com", "1234567", "+55 45 98426-9058", "mamonha cardoso da silva", UserType.PARTICIPANT, null);
 
@@ -34,6 +35,8 @@ public class UserServiceTest {
     void setup(){
         Mockito.when(userRepository.save(any(User.class))).thenReturn(user);
         Mockito.when(userRepository.findById(any(Long.class))).thenReturn(Optional.of(user));
+
+
     }
 
     @Test
