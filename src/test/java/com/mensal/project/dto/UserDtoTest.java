@@ -4,6 +4,7 @@ import com.mensal.project.dto.userdto.ResponseUserDto;
 import com.mensal.project.dto.userdto.UpdateUserDto;
 import com.mensal.project.dto.userdto.UserDto;
 import com.mensal.project.dto.userdto.UserDtoIntegration;
+import com.mensal.project.entities.enums.UserType;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,7 +22,7 @@ public class UserDtoTest {
 
     @Test
     void testResponseUserDto() {
-        ResponseUserDto responseUserDto = new ResponseUserDto(1L, "test@example.com", "+55 12 91234-5678", "John Doe");
+        ResponseUserDto responseUserDto = new ResponseUserDto(1L, "test@example.com", "+55 12 91234-5678", "John Doe", UserType.PARTICIPANT);
 
         assertEquals(1L, responseUserDto.id());
         assertEquals("test@example.com", responseUserDto.email());

@@ -3,6 +3,7 @@ package com.mensal.project.controller;
 import com.mensal.project.configuration.exception.EntityNotFoundException;
 import com.mensal.project.configuration.exception.UniqueMailException;
 import com.mensal.project.dto.userdto.ResponseUserDto;
+import com.mensal.project.dto.userdto.SetRoleDto;
 import com.mensal.project.dto.userdto.UpdateUserDto;
 import com.mensal.project.dto.userdto.UserDto;
 import com.mensal.project.entities.User;
@@ -38,7 +39,7 @@ public class UserControllerTest {
     @MockBean
     UserRepository userRepository;
 
-    User user = new User(1L, "mamonha@gmail.com", "123456", "+55 45 98416-9058", "mamonha cardoso", UserType.PARTICIPANT, null);
+    User user = new User(1L, "mamonha@gmail.com", "123456", "+55 45 98416-9058", "mamonha cardoso", UserType.ADMIN, null);
 
     @BeforeEach
     void Setup() {
@@ -119,15 +120,30 @@ public class UserControllerTest {
     @Test
     @DisplayName("Testando setRole")
     void cenario08() {
+        Long adminId = 1L;
+        Long userId = 2L;
         UserType newRole = UserType.ADMIN;
 
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(userRepository.save(any(User.class))).thenReturn(user);
+        User adminUser = new User();
+        adminUser.setId(adminId);
+        adminUser.setUserType(UserType.ADMIN);
+        adminUser.setName("Admin User");
 
-        ResponseEntity<ResponseUserDto> response = userController.setRole(1L, newRole);
+        User userToUpdate = new User();
+        userToUpdate.setId(userId);
+        userToUpdate.setUserType(UserType.PARTICIPANT);
+        userToUpdate.setName("Nome do Usuário Atualizado");
+
+        SetRoleDto request = new SetRoleDto(userId, newRole);
+
+        when(userRepository.findById(adminId)).thenReturn(Optional.of(adminUser));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(userToUpdate));
+        when(userRepository.save(any(User.class))).thenReturn(userToUpdate);
+
+        ResponseEntity<ResponseUserDto> response = userController.setRole(adminId, request);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(newRole, user.getUserType());  // Verifica se o novo papel foi atribuído corretamente
-        assertEquals("mamonha cardoso", response.getBody().name());
+        assertEquals(newRole, userToUpdate.getUserType());
+        assertEquals("Nome do Usuário Atualizado", response.getBody().name());
     }
 }

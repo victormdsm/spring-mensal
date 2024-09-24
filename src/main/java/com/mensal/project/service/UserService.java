@@ -1,6 +1,8 @@
 package com.mensal.project.service;
 
+import com.mensal.project.configuration.exception.BusinessException;
 import com.mensal.project.configuration.exception.EntityNotFoundException;
+import com.mensal.project.configuration.exception.UnauthorizedException;
 import com.mensal.project.configuration.exception.UniqueMailException;
 import com.mensal.project.entities.User;
 import com.mensal.project.entities.enums.Status;
@@ -25,7 +27,7 @@ public class UserService {
         try{
             return userRepository.save(user);
         } catch (DataIntegrityViolationException ex){
-            throw new UniqueMailException("Este endereço de email já esta sendo utilizado");
+            throw new UniqueMailException("Este endereço de email ou numero de telefone já esta sendo utilizado");
         }
 
     }
@@ -56,10 +58,15 @@ public class UserService {
         return save(update);
     }
 
-    public User setRole(Long id, UserType status) {
+    @Transactional
+    public User setRole(Long id, Long userId,UserType status) {
         var user = findById(id);
-        user.setUserType(status);
-        return save(user);
+        if (!user.getUserType().equals(UserType.ADMIN)) {
+            throw new UnauthorizedException("Usuario não autorizado");
+        }
+        var userUpdate = findById(userId);
+        userUpdate.setUserType(status);
+        return save(userUpdate);
     }
 
 }
