@@ -1,6 +1,7 @@
 package com.mensal.project.service;
 
 import com.mensal.project.configuration.exception.EntityNotFoundException;
+import com.mensal.project.dto.ReportDto;
 import com.mensal.project.entities.Event;
 import com.mensal.project.entities.User;
 import com.mensal.project.entities.UserEvent;
@@ -48,5 +49,16 @@ public class UserEventService {
     @Transactional(readOnly = true)
     public List<UserEvent> findAll(){
         return this.userEventRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public ReportDto reports(Long id) {
+        var event = findById(id);
+        var total = userEventRepository.countById(id);
+        var confirmed = userEventRepository.countByEventIdAndStatus(id, "CONFIRMED");
+        var pending = userEventRepository.countByEventIdAndStatus(id, "PENDING");
+        var cancelled = userEventRepository.countByEventIdAndStatus(id, "CANCELLED");
+
+        return new ReportDto(total, confirmed, pending, cancelled);
     }
 }

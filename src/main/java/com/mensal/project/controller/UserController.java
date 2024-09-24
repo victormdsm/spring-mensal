@@ -3,6 +3,8 @@ package com.mensal.project.controller;
 import com.mensal.project.dto.userdto.ResponseUserDto;
 import com.mensal.project.dto.userdto.UpdateUserDto;
 import com.mensal.project.dto.userdto.UserDto;
+import com.mensal.project.entities.enums.Status;
+import com.mensal.project.entities.enums.UserType;
 import com.mensal.project.mapper.UserMapper;
 import com.mensal.project.service.UserService;
 import jakarta.validation.Valid;
@@ -48,5 +50,11 @@ public class UserController {
     public ResponseEntity<List<ResponseUserDto>> findAll(){
         var user = userService.findAll();
         return new ResponseEntity<>(user.stream().map(mapper::toDto).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @PutMapping("/set-role/{id}")
+    public ResponseEntity<ResponseUserDto> setRole(@PathVariable Long id, @RequestBody UserType role) {
+        var user = userService.setRole(id, role);
+        return new ResponseEntity<>(mapper.toDto(user), HttpStatus.OK);
     }
 }

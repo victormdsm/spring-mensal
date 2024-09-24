@@ -115,4 +115,19 @@ public class UserControllerTest {
         assertThrows(UniqueMailException.class, () -> userController.save(obj));
 
     }
+
+    @Test
+    @DisplayName("Testando setRole")
+    void cenario08() {
+        UserType newRole = UserType.ADMIN;
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        ResponseEntity<ResponseUserDto> response = userController.setRole(1L, newRole);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(newRole, user.getUserType());  // Verifica se o novo papel foi atribuído corretamente
+        assertEquals("mamonha cardoso", response.getBody().name());
+    }
 }

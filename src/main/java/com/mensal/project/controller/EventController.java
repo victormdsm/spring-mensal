@@ -1,5 +1,6 @@
 package com.mensal.project.controller;
 
+import com.mensal.project.dto.ReportDto;
 import com.mensal.project.dto.eventdto.EventDto;
 import com.mensal.project.dto.eventdto.ResponseEventDto;
 import com.mensal.project.dto.eventdto.UpdateEventDto;

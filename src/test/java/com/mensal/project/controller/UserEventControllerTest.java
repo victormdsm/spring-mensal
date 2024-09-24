@@ -1,9 +1,11 @@
 package com.mensal.project.controller;
 
 import com.mensal.project.configuration.exception.EntityNotFoundException;
+import com.mensal.project.dto.ReportDto;
 import com.mensal.project.dto.eventdto.EventDtoIntegration;
 import com.mensal.project.dto.userdto.UserDtoIntegration;
 import com.mensal.project.dto.usereventdto.ResponseUserEventDto;
+import com.mensal.project.dto.usereventdto.UpdateUserEventDto;
 import com.mensal.project.dto.usereventdto.UserEventDto;
 import com.mensal.project.entities.Event;
 import com.mensal.project.entities.User;
@@ -23,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -106,5 +109,58 @@ public class UserEventControllerTest {
         when(userEventRepository.findById(2L)).thenReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class, () -> userEventController.findById(2L));
     }
+
+    @Test
+    @DisplayName("Testando atualizar UserEvent")
+    void cenario06() {
+        var updateUserEventDto = new UpdateUserEventDto(Status.CONFIRMED);
+        when(userEventRepository.save(any(UserEvent.class))).thenReturn(userEvent);
+
+        ResponseEntity<ResponseUserEventDto> response = userEventController.update(1L, updateUserEventDto);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(Status.CONFIRMED, response.getBody().participantStatus());
+    }
+
+    @Test
+    @DisplayName("Testando erro ao atualizar UserEvent não encontrado")
+    void cenario07() {
+        when(userEventRepository.findById(2L)).thenReturn(Optional.empty());
+        var updateUserEventDto = new UpdateUserEventDto(Status.CONFIRMED);
+
+        assertThrows(EntityNotFoundException.class, () -> userEventController.update(2L, updateUserEventDto));
+    }
+
+    @Test
+    @DisplayName("Testando encontrar todos UserEvents")
+    void cenario08() {
+        when(userEventRepository.findAll()).thenReturn(List.of(userEvent));
+
+        ResponseEntity<List<ResponseUserEventDto>> response = userEventController.findAll();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().size());
+    }
+
+    @Test
+    @DisplayName("Testando relatório de UserEvent")
+    void cenario09() {
+        when(userEventRepository.countById(1L)).thenReturn(1L);
+        when(userEventRepository.countByEventIdAndStatus(1L, "CONFIRMED")).thenReturn(1L);
+        when(userEventRepository.countByEventIdAndStatus(1L, "PENDING")).thenReturn(0L);
+        when(userEventRepository.countByEventIdAndStatus(1L, "CANCELLED")).thenReturn(0L);
+
+        ResponseEntity<ReportDto> response = userEventController.reports(1L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1L, response.getBody().total());
+        assertEquals(1L, response.getBody().confirmed());
+        assertEquals(0L, response.getBody().pending());
+        assertEquals(0L, response.getBody().cancelled());
+    }
+
 
 }
