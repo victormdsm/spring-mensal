@@ -1,6 +1,7 @@
 package com.mensal.project.controller;
 
 import com.mensal.project.dto.userdto.ResponseUserDto;
+import com.mensal.project.dto.userdto.SetRoleDto;
 import com.mensal.project.dto.userdto.UpdateUserDto;
 import com.mensal.project.dto.userdto.UserDto;
 import com.mensal.project.entities.enums.Status;
@@ -53,8 +54,8 @@ public class UserController {
     }
 
     @PutMapping("/set-role/{id}")
-    public ResponseEntity<ResponseUserDto> setRole(@PathVariable Long id, @RequestBody UserType role) {
-        var user = userService.setRole(id, role);
+    public ResponseEntity<ResponseUserDto> setRole(@PathVariable Long id, @RequestBody SetRoleDto dto) {
+        var user = userService.setRole(id, dto.id() ,dto.role());
         return new ResponseEntity<>(mapper.toDto(user), HttpStatus.OK);
     }
 }
