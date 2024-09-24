@@ -33,31 +33,31 @@ public class EventController {
     }
 
     @PutMapping("/update/{id}")
-    private ResponseEntity<ResponseEventDto> update(@PathVariable Long id, @RequestBody UpdateEventDto dto){
+    public ResponseEntity<ResponseEventDto> update(@PathVariable Long id, @RequestBody UpdateEventDto dto){
         var event = mapper.toEntityUpdate(dto);
         event = eventService.update(id, event);
         return ResponseEntity.ok(mapper.toDto(event));
     }
     @GetMapping("/findbyid/{id}")
-    private ResponseEntity<ResponseEventDto> findById(@PathVariable Long id){
+    public ResponseEntity<ResponseEventDto> findById(@PathVariable Long id){
         var event = eventService.findById(id);
         return new ResponseEntity<>(mapper.toDto(event), HttpStatus.OK);
     }
 
     @GetMapping("/findall")
-    private ResponseEntity<List<ResponseEventDto>> findAll(){
+    public ResponseEntity<List<ResponseEventDto>> findAll(){
         var event = eventService.findAll();
         return new ResponseEntity<>(event.stream().map(mapper::toDto).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @GetMapping("/user/{id}")
-    private ResponseEntity<List<ResponseEventDto>> findByUserId(@PathVariable Long id){
+    public ResponseEntity<List<ResponseEventDto>> findByUserId(@PathVariable Long id){
         var list = eventService.findByUserId(id);
         return new ResponseEntity<>(list.stream().map(mapper::toDto).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    private ResponseEntity<Void> delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         eventService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

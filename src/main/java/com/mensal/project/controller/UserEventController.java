@@ -35,19 +35,19 @@ public class UserEventController {
     }
 
     @PutMapping("/update/{id}")
-    private ResponseEntity<ResponseUserEventDto> update(@PathVariable Long id, @RequestBody UpdateUserEventDto dto){
+    public ResponseEntity<ResponseUserEventDto> update(@PathVariable Long id, @RequestBody UpdateUserEventDto dto){
         var event = mapper.toEntityUpdate(dto);
         event = userEventService.update(id, event);
         return ResponseEntity.ok(mapper.toDto(event));
     }
     @GetMapping("/findbyid/{id}")
-    private ResponseEntity<ResponseUserEventDto> findById(@PathVariable Long id){
+    public ResponseEntity<ResponseUserEventDto> findById(@PathVariable Long id){
         var event = userEventService.findById(id);
         return new ResponseEntity<>(mapper.toDto(event), HttpStatus.OK);
     }
 
     @GetMapping("/findall")
-    private ResponseEntity<List<ResponseUserEventDto>> findAll(){
+    public ResponseEntity<List<ResponseUserEventDto>> findAll(){
         var event = userEventService.findAll();
         return new ResponseEntity<>(event.stream().map(mapper::toDto).collect(Collectors.toList()), HttpStatus.OK);
     }
