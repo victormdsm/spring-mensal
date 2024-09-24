@@ -1,6 +1,7 @@
 package com.mensal.project.controller;
 
 
+import com.mensal.project.dto.ReportDto;
 import com.mensal.project.dto.eventdto.ResponseEventDto;
 import com.mensal.project.dto.eventdto.UpdateEventDto;
 import com.mensal.project.dto.usereventdto.ResponseUserEventDto;
@@ -51,4 +52,11 @@ public class UserEventController {
         var event = userEventService.findAll();
         return new ResponseEntity<>(event.stream().map(mapper::toDto).collect(Collectors.toList()), HttpStatus.OK);
     }
+
+    @GetMapping("/events-reports/{id}")
+    public ResponseEntity<ReportDto> reports(@PathVariable Long id){
+        var response = userEventService.reports(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }

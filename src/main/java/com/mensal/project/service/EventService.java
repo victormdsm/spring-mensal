@@ -3,7 +3,9 @@ package com.mensal.project.service;
 import com.mensal.project.configuration.exception.BusinessException;
 import com.mensal.project.configuration.exception.EntityNotFoundException;
 import com.mensal.project.configuration.exception.UnauthorizedException;
+import com.mensal.project.dto.ReportDto;
 import com.mensal.project.entities.Event;
+import com.mensal.project.entities.enums.Status;
 import com.mensal.project.entities.enums.UserType;
 import com.mensal.project.repository.EventRepository;
 import com.mensal.project.repository.UserRepository;
@@ -93,4 +95,5 @@ public class EventService {
 
     @Transactional
     public void delete(Long id){eventRepository.deleteById(id);}
+
 }
