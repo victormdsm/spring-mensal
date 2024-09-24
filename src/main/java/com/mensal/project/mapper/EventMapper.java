@@ -15,5 +15,6 @@ public interface EventMapper {
     Event toEntity(EventDto dto);
     ResponseEventDto toDto(Event event);
     Event toEntityUpdate(UpdateEventDto dto);
+    @Mapping(source = "id", target = "id")
     Event toEntityIntegration(EventDtoIntegration dto);
 }

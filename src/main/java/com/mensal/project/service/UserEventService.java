@@ -28,7 +28,7 @@ public class UserEventService {
     @Transactional
     public UserEvent save(UserEvent user) {
         var usuario = userRepository.findById(user.getUsers().getId()).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
-        var evento = userRepository.findById(user.getEvent().getId()).orElseThrow(() -> new EntityNotFoundException("Evento não encontrado"));
+        var evento = eventRepository.findById(user.getEvent().getId()).orElseThrow(() -> new EntityNotFoundException("Evento não encontrado"));
 
         return userEventRepository.save(user);
     }

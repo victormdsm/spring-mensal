@@ -25,13 +25,13 @@ public class UserEventController {
     private UserEventService userEventService;
 
     @Autowired
-    UserEventMapper mapper;
+    private UserEventMapper mapper;
 
     @PostMapping("/save")
     public ResponseEntity<ResponseUserEventDto> save(@Valid @RequestBody UserEventDto dto){
         var userEvent = mapper.toEntity(dto);
         userEventService.save(userEvent);
-        return ResponseEntity.ok(mapper.toDto(userEvent));
+        return new ResponseEntity<>(mapper.toDto(userEvent), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")

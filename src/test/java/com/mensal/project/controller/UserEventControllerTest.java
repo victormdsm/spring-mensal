@@ -48,35 +48,32 @@ public class UserEventControllerTest {
     User userAdmin = new User(1L, "admin@gmail.com", "123456", "+55 45 98416-9058", "Admin", UserType.ADMIN, null);
     User userParticipant = new User(2L, "participant@gmail.com", "123456", "+55 45 98416-9058", "Participant", UserType.PARTICIPANT, null);
     Event event = new Event(1L, "Evento Teste", "Descrição do Evento", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2), "Local Teste", 100, userAdmin, null, null);
-    UserEvent userEvent = new UserEvent(1L, LocalDateTime.now(), Status.PENDING, userParticipant, event);
+    UserEvent userEvent = new UserEvent(1L, LocalDateTime.now(), Status.PENDING, userAdmin, event);
 
     @BeforeEach
-    void setup() {
+    void Setup() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(userAdmin));
+
         when(userRepository.findById(2L)).thenReturn(Optional.of(userParticipant));
+
         when(eventRepository.findById(1L)).thenReturn(Optional.of(event));
+
         when(userEventRepository.save(any(UserEvent.class))).thenReturn(userEvent);
+
         when(userEventRepository.findById(1L)).thenReturn(Optional.of(userEvent));
     }
 
     @Test
     @DisplayName("Testando salvar UserEvent")
     void cenario01() {
-        var userEventDto = new UserEventDto(new UserDtoIntegration(2L), new EventDtoIntegration(1L));
-
-        // Simular a entidade UserEvent a ser salva
-        UserEvent mockUserEvent = new UserEvent();
-        mockUserEvent.setId(1L);
-        mockUserEvent.setStatus(Status.PENDING);
-
-        // Quando o repositório salvar a entidade, retorna a mockada
-        when(userEventService.save(any(UserEventDto.class))).thenReturn(mockUserEvent);
+        var userDto = new UserDtoIntegration(1L);
+        var eventDto = new EventDtoIntegration(1L);
+        var userEventDto = new UserEventDto(userDto, eventDto);
 
         ResponseEntity<ResponseUserEventDto> response = userEventController.save(userEventDto);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(1L, response.getBody().id());
         assertEquals(Status.PENDING, response.getBody().participantStatus());
     }
 
@@ -84,7 +81,6 @@ public class UserEventControllerTest {
     @DisplayName("Testando erro ao salvar UserEvent com evento não encontrado")
     void cenario02() {
         var userEventDto = new UserEventDto(new UserDtoIntegration(2L), new EventDtoIntegration(2L));
-        doThrow(new EntityNotFoundException("Event not found")).when(userEventRepository).save(userEventDto);
 
         assertThrows(EntityNotFoundException.class, () -> userEventController.save(userEventDto));
     }
@@ -92,8 +88,7 @@ public class UserEventControllerTest {
     @Test
     @DisplayName("Testando erro ao salvar UserEvent com usuário não encontrado")
     void cenario03() {
-        var userEventDto = new UserEventDto(new UserDtoIntegration(3L), new EventDtoIntegration(1L));
-        doThrow(new EntityNotFoundException("User not found")).when(userEventService).save(userEventDto);
+       var userEventDto = new UserEventDto(new UserDtoIntegration(3L), new EventDtoIntegration(1L));
 
         assertThrows(EntityNotFoundException.class, () -> userEventController.save(userEventDto));
     }

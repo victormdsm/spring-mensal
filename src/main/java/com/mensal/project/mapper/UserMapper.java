@@ -11,6 +11,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
+    @Mapping(source = "id", target = "id")
     User toEntityIntegration(UserDtoIntegration dto);
     User toEntity(UserDto dto);
     ResponseUserDto toDto(User user);
